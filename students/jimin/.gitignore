@@ -1,6 +1,6 @@
 
-# Created by https://www.toptal.com/developers/gitignore/api/python,pycharm,linux,vim,macos,visualstudiocode,zsh
-# Edit at https://www.toptal.com/developers/gitignore?templates=python,pycharm,linux,vim,macos,visualstudiocode,zsh
+# Created by https://www.toptal.com/developers/gitignore/api/python,pycharm,vim,visualstudiocode,macos,zsh,linux
+# Edit at https://www.toptal.com/developers/gitignore?templates=python,pycharm,vim,visualstudiocode,macos,zsh,linux
 
 ### Linux ###
 *~
@@ -399,6 +399,6 @@ zsdoc/data
 /tests/_output/*
 !/tests/_output/.gitkeep
 
-# End of https://www.toptal.com/developers/gitignore/api/python,pycharm,linux,vim,macos,visualstudiocode,zsh
+# End of https://www.toptal.com/developers/gitignore/api/python,pycharm,vim,visualstudiocode,macos,zsh,linux
 
 my_settings.py
