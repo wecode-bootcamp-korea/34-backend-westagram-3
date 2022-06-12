@@ -19,13 +19,13 @@ class RegexTool():
                 raise
 
     @staticmethod        
-    def username_regex(username):
+    def username_validate(username):
         if User.objects.filter(username = username).exists():
             RegexTool.result['message'] = 'UsernameDuplicate'
             raise
 
     @staticmethod        
-    def email_regex(email):
+    def email_validate(email):
         if User.objects.filter(email = email).exists():
             RegexTool.result['message'] = 'EmailDuplicate'
             raise
@@ -34,13 +34,13 @@ class RegexTool():
             raise
 
     @staticmethod
-    def password_regex(password):
+    def password_validate(password):
         if not re.match(RegexTool.PASSWORD_REGEX, password):
             RegexTool.result['message'] = 'InvalidPassword'
             raise
     
     @staticmethod
-    def phone_number_regex(phone_number):
+    def phone_number_validate(phone_number):
         if User.objects.filter(phone_number = phone_number).exists():
             RegexTool.result['message'] = 'PhoneNumberDuplicate'
             raise
@@ -60,10 +60,10 @@ class UserView(View):
             phone_number     = data['phone_number']
             
             RegexTool.not_found(data)
-            RegexTool.username_regex(username)
-            RegexTool.email_regex(email)
-            RegexTool.phone_number_regex(phone_number)
-            RegexTool.password_regex(password)
+            RegexTool.username_validate(username)
+            RegexTool.email_validate(email)
+            RegexTool.phone_number_validate(phone_number)
+            RegexTool.password_validate(password)
 
             User.objects.create(
                 username     = username ,
@@ -75,9 +75,7 @@ class UserView(View):
             )
 
             return JsonResponse({'message' : 'SUCCESS'} , status = 201)
-
         except KeyError:
             return JsonResponse({'message' : 'KeyError'} , status = 400)
-
         except:
             return JsonResponse(RegexTool.result, status = 400)
