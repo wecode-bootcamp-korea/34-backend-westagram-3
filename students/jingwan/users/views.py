@@ -48,7 +48,7 @@ class RegexTool():
             RegexTool.result['message'] = 'InvalidPhoneNumber'
             raise
 
-class UserView(View):
+class SingUpView(View):
     def post(self, request):
         try:
             data             = json.loads(request.body)
