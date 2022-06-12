@@ -79,3 +79,18 @@ class SingUpView(View):
             return JsonResponse({'message' : 'KeyError'} , status = 400)
         except:
             return JsonResponse(RegexTool.result, status = 400)
+
+class LogInView(View):
+    def post(self, request):
+        try:
+            data      = json.loads(request.body)
+            username  = data['username']
+            password  = data['password']
+
+            if not User.objects.filter(username = username, password = password).exists():
+                return JsonResponse({"message" : "INVALID_USER"}, status = 401)
+            
+            return JsonResponse({'message' : 'SUCCESS'} , status = 200)
+
+        except KeyError:
+            return JsonResponse({'message' : 'KeyError'} , status = 400)
