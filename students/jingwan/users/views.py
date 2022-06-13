@@ -1,10 +1,11 @@
 import json
 
-from django.http      import JsonResponse
-from django.views     import View
+from django.http            import JsonResponse
+from django.views           import View
+from django.core.exceptions import ValidationError
 
-from users.models     import User
-from users.validator  import (
+from users.models           import User
+from users.validator        import (
     username_validate,
     email_validate,
     password_validate,
