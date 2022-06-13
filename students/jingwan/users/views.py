@@ -29,13 +29,13 @@ class SingUpView(View):
             password_validate(password)
 
             if User.objects.filter(username = username).exists():
-                return JsonResponse({'message' : 'Duplicated username'} , status = 400)
+                return JsonResponse({'message' : 'Duplicated_Username'} , status = 400)
             
             if User.objects.filter(phone_number = phone_number).exists():
-                return JsonResponse({'message' : 'Duplicated PhoneNumber'} , status = 400)
+                return JsonResponse({'message' : 'Duplicated_PhoneNumber'} , status = 400)
             
             if User.objects.filter(email = email).exists():
-                return JsonResponse({'message' : 'Duplicated Email'} , status = 400)    
+                return JsonResponse({'message' : 'Duplicated_Email'} , status = 400)    
 
             User.objects.create(
                 username     = username ,
