@@ -3,50 +3,9 @@ import re
 
 from django.http      import JsonResponse
 from django.views     import View
+
 from users.models     import User
-
-class RegexTool():
-    EMAIL_REGEX         = '^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
-    PHONE_NUMBER_REGEX  = '\d{3}-\d{3,4}-\d{4}'
-    PASSWORD_REGEX      = '^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$'
-    result              = {'message': None}
-    
-    @staticmethod
-    def not_found(data):
-        for key,value in data.items():
-            if bool(value) == False:
-                RegexTool.result['message'] = f'{key}NotFound'
-                raise
-
-    @staticmethod        
-    def username_validate(username):
-        if User.objects.filter(username = username).exists():
-            RegexTool.result['message'] = 'UsernameDuplicate'
-            raise
-
-    @staticmethod        
-    def email_validate(email):
-        if User.objects.filter(email = email).exists():
-            RegexTool.result['message'] = 'EmailDuplicate'
-            raise
-        elif not re.match(RegexTool.EMAIL_REGEX, email):
-            RegexTool.result['message'] = 'InvalidEmail'
-            raise
-
-    @staticmethod
-    def password_validate(password):
-        if not re.match(RegexTool.PASSWORD_REGEX, password):
-            RegexTool.result['message'] = 'InvalidPassword'
-            raise
-    
-    @staticmethod
-    def phone_number_validate(phone_number):
-        if User.objects.filter(phone_number = phone_number).exists():
-            RegexTool.result['message'] = 'PhoneNumberDuplicate'
-            raise
-        elif not re.match(RegexTool.PHONE_NUMBER_REGEX ,phone_number):
-            RegexTool.result['message'] = 'InvalidPhoneNumber'
-            raise
+from users.validator  import *
 
 class SingUpView(View):
     def post(self, request):
@@ -59,11 +18,11 @@ class SingUpView(View):
             password         = data['password']
             phone_number     = data['phone_number']
             
-            RegexTool.not_found(data)
-            RegexTool.username_validate(username)
-            RegexTool.email_validate(email)
-            RegexTool.phone_number_validate(phone_number)
-            RegexTool.password_validate(password)
+            not_found(data)
+            username_validate(username)
+            email_validate(email)
+            phone_number_validate(phone_number)
+            password_validate(password)
 
             User.objects.create(
                 username     = username ,
@@ -78,7 +37,7 @@ class SingUpView(View):
         except KeyError:
             return JsonResponse({'message' : 'KeyError'} , status = 400)
         except:
-            return JsonResponse(RegexTool.result, status = 400)
+            return JsonResponse(result, status = 400)
 
 class LogInView(View):
     def post(self, request):
