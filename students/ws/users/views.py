@@ -36,5 +36,22 @@ class SighUpView(View):
             return JsonResponse({"message": "SIGHUP SUCCESS"}, status=201)
         except KeyError:
             return JsonResponse({"message" : "KEYERROR"}, status = 400)
-        except ValidationError as message:
-            return JsonResponse({"message" : message.message}, status = 400)
+        except ValidationError as error:
+            return JsonResponse({"message" : error.message}, status = 400)
+
+class LogInView(View):
+    def post(self, request):
+        try:
+            data            = json.loads(request.body)
+            email_insert    = data['email']
+            password_insert = data['password']
+
+            if not User.objects.filter(email = email_insert).exists():
+                return JsonResponse({"message" : "INVALID_USER"}, status = 401)
+
+            if User.objects.get(email = email_insert).password != password_insert:
+                return JsonResponse({"message" : "INVALID_USER"}, status = 401)
+
+            return JsonResponse({"message": "LOGIN SUCCESS"}, status=200)
+        except KeyError:
+            return JsonResponse({"message" : "KEYERROR"}, status = 400)
