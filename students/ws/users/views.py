@@ -1,4 +1,5 @@
 import json
+import bcrypt
 
 from django.http            import JsonResponse
 from django.core.exceptions import ValidationError 
@@ -24,12 +25,15 @@ class SighUpView(View):
             if User.objects.filter(email = email).exists():
                 return  JsonResponse( {"message" : "Email Already Exists"}, status = 400)
 
+            hashed_password  = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+            decoded_password = hashed_password.decode('utf-8')
+
             User.objects.create(
                 username     = username,
                 first_name   = first_name,
                 last_name    = last_name,
                 email        = email,
-                password     = password,                    
+                password     = decoded_password,                    
                 phone_number = phone_number
             )
 
