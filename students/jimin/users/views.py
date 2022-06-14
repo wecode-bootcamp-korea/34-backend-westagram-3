@@ -1,5 +1,6 @@
 import json
 import re
+import bcrypt
 
 from django.http     import JsonResponse
 from django.views    import View
@@ -41,11 +42,14 @@ class SignUpView(View):
              if User.objects.filter(email=email).exists():
                  return JsonResponse({'message': 'DUPLICATE_EMAIL'}, status=400)
              
+            
+             decoded_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+             
              User.objects.create(
                 first_name   = data['first_name'],
                 last_name    = data['last_name'],
                 email        = data['email'],
-                password     = data['password'],
+                password     = decoded_password,
                 phone_number = data['phone_number'],
             )
              
