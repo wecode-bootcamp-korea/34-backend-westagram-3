@@ -1,7 +1,8 @@
 import json
 
-from django.http     import JsonResponse
-from django.views    import View
+from django.http            import JsonResponse
+from django.core.exceptions import ValidationError 
+from django.views           import View
 
 from users.models    import User
 from users.validator import validate_email, validate_password
@@ -19,12 +20,6 @@ class SighUpView(View):
 
             validate_email(email)
             validate_password(password)
-
-            if not validate_email(email):
-                return JsonResponse( {"message" : "INVALID_EMAIL"}, status = 400)
-
-            if not validate_password(password):
-                return JsonResponse( {"message" : "INVALID_PASSWORD"}, status = 400)
                 
             if User.objects.filter(email = email).exists():
                 return  JsonResponse( {"message" : "Email Already Exists"}, status = 400)
@@ -40,4 +35,6 @@ class SighUpView(View):
 
             return JsonResponse({"message": "SIGHUP SUCCESS"}, status=201)
         except KeyError:
-            return JsonResponse( {"message" : "KEYERROR"}, status = 400)
+            return JsonResponse({"message" : "KEYERROR"}, status = 400)
+        except ValidationError as message:
+            return JsonResponse({"message" : message.message}, status = 400)
