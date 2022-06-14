@@ -53,3 +53,22 @@ class SingUpView(View):
             
         except ValidationError as erorr:
             return JsonResponse({'message' : erorr.message}, status = 400)
+
+class LogInView(View):
+    def post(self, request):
+        try:
+            data      = json.loads(request.body)
+            username  = data['username']
+            password  = data['password']
+
+            if not username or not password:
+                return JsonResponse({"message" : "INVALID_USER"}, status = 401)
+            elif not User.objects.filter(username = username).exists():
+                return JsonResponse({"message" : "INVALID_USER"}, status = 401)
+            elif User.objects.get(username = username).password != password:
+                return JsonResponse({"message" : "INVALID_USER"}, status = 401)
+            
+            return JsonResponse({'message' : 'SUCCESS'} , status = 200)
+
+        except KeyError:
+            return JsonResponse({'message' : 'Key_Error'} , status = 400)
