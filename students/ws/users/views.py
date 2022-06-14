@@ -36,8 +36,8 @@ class SighUpView(View):
             return JsonResponse({"message": "SIGHUP SUCCESS"}, status=201)
         except KeyError:
             return JsonResponse({"message" : "KEYERROR"}, status = 400)
-        except ValidationError as message:
-            return JsonResponse({"message" : message.message}, status = 400)
+        except ValidationError as error:
+            return JsonResponse({"message" : error.message}, status = 400)
 
 class LogInView(View):
     def post(self, request):
