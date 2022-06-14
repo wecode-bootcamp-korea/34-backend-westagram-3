@@ -39,7 +39,6 @@ class SighUpView(View):
         except ValidationError as message:
             return JsonResponse({"message" : message.message}, status = 400)
 
-
 class LogInView(View):
     def post(self, request):
         try:
@@ -49,9 +48,10 @@ class LogInView(View):
 
             if not User.objects.filter(email = email_insert).exists():
                 return JsonResponse({"message" : "INVALID_USER"}, status = 401)
-            elif User.objects.get(email = email_insert).password != password_insert:
+
+            if User.objects.get(email = email_insert).password != password_insert:
                 return JsonResponse({"message" : "INVALID_USER"}, status = 401)
 
-            return JsonResponse({"message": "LOGIN SUCCESS"}, status=201)
+            return JsonResponse({"message": "LOGIN SUCCESS"}, status=200)
         except KeyError:
             return JsonResponse({"message" : "KEYERROR"}, status = 400)
