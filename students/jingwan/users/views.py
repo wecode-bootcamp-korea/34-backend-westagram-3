@@ -57,9 +57,9 @@ class SingUpView(View):
 class LogInView(View):
     def post(self, request):
         try:
-            data      = json.loads(request.body)
-            username  = data['username']
-            password  = data['password']
+            data     = json.loads(request.body)
+            username = data['username']
+            password = data['password']
 
             if not username or not password:
                 return JsonResponse({"message" : "INVALID_USER"}, status = 401)
