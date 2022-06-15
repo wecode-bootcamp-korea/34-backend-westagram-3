@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import pymysql
 
 from pathlib     import Path
-from my_settings import SECRET_KEY , DATABASES
+from my_settings import SECRET_KEY , DATABASES, ALGORITHM
 
 # add pymysql for m1 user
 pymysql.install_as_MySQLdb()
@@ -150,3 +150,5 @@ CORS_ALLOW_HEADERS = (
     'x-csrftoken',
     'x-requested-with',
 )
+
+ALGORITHM = ALGORITHM
