@@ -28,6 +28,8 @@ class SingUpView(View):
             phone_number_validate(phone_number)
             password_validate(password)
 
+            agagag
+
             if User.objects.filter(username = username).exists():
                 return JsonResponse({'message' : 'Duplicated_Username'} , status = 400)
             
