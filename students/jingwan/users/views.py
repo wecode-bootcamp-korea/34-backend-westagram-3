@@ -31,7 +31,7 @@ class SingUpView(View):
             phone_number_validate(phone_number)
             password_validate(password)
 
-            hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
             if User.objects.filter(username = username).exists():
                 return JsonResponse({'message' : 'Duplicated_Username'} , status = 400)
@@ -65,7 +65,8 @@ class LogInView(View):
             data     = json.loads(request.body)
             username = data['username']
             password = data['password']
-            hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+            user_id  = User.objects.get(username = username).id
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
             if not User.objects.filter(username = username).exists():
                 return JsonResponse({"message" : "INVALID_USER"}, status = 401)
@@ -73,9 +74,10 @@ class LogInView(View):
             if User.objects.get(username = username).password != hashed_password:
                 return JsonResponse({"message" : "INVALID_USER"}, status = 401)
             
-            token = jwt.encode({'user_id': username.id}, SECRET_KEY, ALGORITHM)
+
+            token = jwt.encode({'user_id': user_id}, SECRET_KEY, ALGORITHM)
                 
-            return JsonResponse({'message' : 'SUCCESS'} , status = 200)
+            return JsonResponse({'accec_' : token} , status = 200)
 
         except KeyError:
             return JsonResponse({'message' : 'Key_Error'} , status = 400)
