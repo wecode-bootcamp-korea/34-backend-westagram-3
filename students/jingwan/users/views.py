@@ -1,4 +1,5 @@
 import json
+import bcrypt
 
 from django.http            import JsonResponse
 from django.views           import View
@@ -28,7 +29,7 @@ class SingUpView(View):
             phone_number_validate(phone_number)
             password_validate(password)
 
-            agagag
+            hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
             if User.objects.filter(username = username).exists():
                 return JsonResponse({'message' : 'Duplicated_Username'} , status = 400)
@@ -44,7 +45,7 @@ class SingUpView(View):
                 first_name   = first_name ,
                 last_name    = last_name ,
                 email        = email ,
-                password     = password ,
+                password     = hashed_password ,
                 phone_number = phone_number
             )
 
