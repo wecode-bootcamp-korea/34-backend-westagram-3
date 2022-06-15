@@ -66,12 +66,12 @@ class LogInView(View):
             username = data['email']
             password = data['password']
             user_id  = User.objects.get(username = username).id
-            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
             if not User.objects.filter(username = username).exists():
                 return JsonResponse({"message" : "INVALID_USER"}, status = 401)
             
-            if not bcrypt.checkpw(password.encode('utf-8') , hashed_password.encode('utf-8')):
+            if not bcrypt.checkpw(password.encode('utf-8') , hashed_password):
                 return JsonResponse({"message" : "INVALID_USER"}, status = 401)
             
 
