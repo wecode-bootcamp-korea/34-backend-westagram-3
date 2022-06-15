@@ -52,6 +52,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
+ALGORITHM = 'HS256'
 
 ROOT_URLCONF = 'westagram.urls'
 
