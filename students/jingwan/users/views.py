@@ -63,7 +63,7 @@ class LogInView(View):
     def post(self, request):
         try:
             data     = json.loads(request.body)
-            username = data['username']
+            username = data['email']
             password = data['password']
             user_id  = User.objects.get(username = username).id
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -71,13 +71,13 @@ class LogInView(View):
             if not User.objects.filter(username = username).exists():
                 return JsonResponse({"message" : "INVALID_USER"}, status = 401)
             
-            if User.objects.get(username = username).password != hashed_password:
+            if not bcrypt.checkpw(password.encode('utf-8') , hashed_password.encode('utf-8')):
                 return JsonResponse({"message" : "INVALID_USER"}, status = 401)
             
 
             token = jwt.encode({'user_id': user_id}, SECRET_KEY, ALGORITHM)
                 
-            return JsonResponse({'accec_' : token} , status = 200)
+            return JsonResponse({'ACCESS_TOKEN' : token} , status = 200)
 
         except KeyError:
             return JsonResponse({'message' : 'Key_Error'} , status = 400)
