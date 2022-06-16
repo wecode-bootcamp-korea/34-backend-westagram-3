@@ -63,19 +63,18 @@ class LogInView(View):
     def post(self, request):
         try:
             data     = json.loads(request.body)
-            username = data['email']
+            username = data['username']
             password = data['password']
-            user_id  = User.objects.get(username = username).id
-            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
             if not User.objects.filter(username = username).exists():
                 return JsonResponse({"message" : "INVALID_USER"}, status = 401)
-            
-            if not bcrypt.checkpw(password.encode('utf-8') , hashed_password):
-                return JsonResponse({"message" : "INVALID_USER"}, status = 401)
-            
 
-            token = jwt.encode({'user_id': user_id}, SECRET_KEY, ALGORITHM)
+            user  = User.objects.get(username = username)
+            
+            if not bcrypt.checkpw(password.encode('utf-8') , user.encode('utf-8')):
+                return JsonResponse({"message" : "INVALID_USER"}, status = 401)
+
+            token = jwt.encode({'user_id': user.id}, SECRET_KEY, ALGORITHM)
                 
             return JsonResponse({'ACCESS_TOKEN' : token} , status = 200)
 
