@@ -54,16 +54,16 @@ class LogInView(View):
             email_insert    = data['email']
             password_insert = data['password']
 
+            user = User.objects.get(email = email_insert)
+
             if not User.objects.filter(email = email_insert).exists():
                 return JsonResponse({"message" : "INVALID_USER"}, status = 401)
 
-            password_db_encoded     = User.objects.get(email = email_insert).password.encode('utf-8')
+            password_db_encoded     = user.password.encode('utf-8')
             password_insert_encoded = password_insert.encode('utf-8')
 
             if not bcrypt.checkpw(password_insert_encoded, password_db_encoded):
                 return JsonResponse({"message" : "INVALID_USER"}, status = 401)
-
-            user = User.objects.get(email = email_insert)
 
             access_token = jwt.encode({"id" : user.id}, SECRET_KEY, algorithm = ALGORITHM)
 
