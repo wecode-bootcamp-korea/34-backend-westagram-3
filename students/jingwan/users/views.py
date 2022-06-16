@@ -69,7 +69,7 @@ class LogInView(View):
             if not User.objects.filter(username = username).exists():
                 return JsonResponse({"message" : "INVALID_USER"}, status = 401)
 
-            user  = User.objects.get(username = username)
+            user = User.objects.get(username = username)
             
             if not bcrypt.checkpw(password.encode('utf-8') , user.encode('utf-8')):
                 return JsonResponse({"message" : "INVALID_USER"}, status = 401)
