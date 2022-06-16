@@ -27,15 +27,14 @@ class SighUpView(View):
             if User.objects.filter(email = email).exists():
                 return  JsonResponse( {"message" : "Email Already Exists"}, status = 400)
 
-            hashed_password  = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-            decoded_password = hashed_password.decode('utf-8')
+            hashed_password_decoded  = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
             User.objects.create(
                 username     = username,
                 first_name   = first_name,
                 last_name    = last_name,
                 email        = email,
-                password     = decoded_password,                    
+                password     = hashed_password_decoded,                    
                 phone_number = phone_number
             )
 
@@ -64,12 +63,11 @@ class LogInView(View):
             if not bcrypt.checkpw(password_insert_encoded, password_db_encoded):
                 return JsonResponse({"message" : "INVALID_USER"}, status = 401)
 
-            access_token = jwt.encode({"id" : User.objects.get(email = email_insert).id}, SECRET_KEY, algorithm = ALGORITHM)
+            user = User.objects.get(email = email_insert)
 
-            return JsonResponse({
-                 "message"      : "LOGIN_SUCCESS",
-                 "access_token" : access_token
-            }, status=200)
+            access_token = jwt.encode({"id" : user.id}, SECRET_KEY, algorithm = ALGORITHM)
+
+            return JsonResponse({"access_token" : access_token}, status=200)
 
         except KeyError:
             return JsonResponse({"message" : "KEYERROR"}, status = 400)
