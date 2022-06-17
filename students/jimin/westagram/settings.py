@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib       import Path
-from my_settings   import DATABASES,SECRET_KEY
+from my_settings   import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,6 +28,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+TIME_ZONE = 'Asia/Seoul'
+USE_TZ	  = False
+
 
 # Application definition
 
@@ -40,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'users',
+    'postings',
 ]
 
 MIDDLEWARE = [
@@ -52,7 +56,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
-ALGORITHM = 'HS256'
+ALGORITHM = ALGORITHM
 
 ROOT_URLCONF = 'westagram.urls'
 
