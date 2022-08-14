@@ -1,10 +1,13 @@
 import json
+import bcrypt
+import jwt
 
 from django.http            import JsonResponse
 from django.views           import View
 from django.core.exceptions import ValidationError
 
 from users.models           import User
+from westagram.settings     import SECRET_KEY, ALGORITHM
 from users.validator        import (
     username_validate,
     email_validate,
@@ -28,6 +31,8 @@ class SingUpView(View):
             phone_number_validate(phone_number)
             password_validate(password)
 
+            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
             if User.objects.filter(username = username).exists():
                 return JsonResponse({'message' : 'Duplicated_Username'} , status = 400)
             
@@ -42,7 +47,7 @@ class SingUpView(View):
                 first_name   = first_name ,
                 last_name    = last_name ,
                 email        = email ,
-                password     = password ,
+                password     = hashed_password ,
                 phone_number = phone_number
             )
 
@@ -63,11 +68,15 @@ class LogInView(View):
 
             if not User.objects.filter(username = username).exists():
                 return JsonResponse({"message" : "INVALID_USER"}, status = 401)
+
+            user  = User.objects.get(username = username)
             
-            if User.objects.get(username = username).password != password:
+            if not bcrypt.checkpw(password.encode('utf-8') , user.encode('utf-8')):
                 return JsonResponse({"message" : "INVALID_USER"}, status = 401)
+
+            token = jwt.encode({'user_id': user.id}, SECRET_KEY, ALGORITHM)
                 
-            return JsonResponse({'message' : 'SUCCESS'} , status = 200)
+            return JsonResponse({'ACCESS_TOKEN' : token} , status = 200)
 
         except KeyError:
             return JsonResponse({'message' : 'Key_Error'} , status = 400)

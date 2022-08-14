@@ -20,11 +20,11 @@ class PostingView(View) :
              post    = data['post'],
              
          )
-         return JsonResponse({"message":"SUCCESS"})
+         return JsonResponse({"message":"SUCCESS"},status = 201)
     except KeyError:
          return JsonResponse({"message":"KEY_ERROR"},status=400)
  def get(self, request):
-        return JsonResponse({'results':list( Posting.objects.values())},status=200)
+         return JsonResponse({'results':list( Posting.objects.values())},status=200)
     
 class CommentView(View):  
      @login_decorator
@@ -38,14 +38,14 @@ class CommentView(View):
          Comment.objects.create(
              user    = request.user,
              post_id = data['post_id'],
-             comment =data['comment'],
+             comment = data['comment'],
          )
          return JsonResponse({"message":"SUCCESS"})
       except KeyError:
          return JsonResponse({"message":"KEY_ERROR"},status=400)  
      
      def get(self, request):
-        return JsonResponse({'comment_list':list( Comment.objects.values())},status=200)
+        return JsonResponse({'comment_list':list( Comment.objects.filter('post_id'))},status=200)
     
 class LikeView(View):
     @login_decorator
